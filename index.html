@@ -384,6 +384,15 @@
       </div>
 
       <div class="config-grupo">
+        <h3><svg class="icon" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Aprobación de nómina</h3>
+        <p>Después de revisar <strong>Nomina_Semanal</strong>, aprueba una sola vez. La nómina se copiará a <strong>Historial_Pagos</strong> y se enviará el correo.</p>
+        <button class="btn-chico btn-full-flat" id="btnAprobarNomina">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M5 12l4 4L19 6"/></svg>Aprobar nómina semanal
+        </button>
+        <p id="resultadoAprobacion" style="display:none;border-radius:8px;padding:10px;margin-top:10px;font-weight:600;word-break:break-word;"></p>
+      </div>
+
+      <div class="config-grupo">
         <h3><svg class="icon" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>PIN de acceso</h3>
         <div class="fila-estado-pin">
           <span class="estado-txt" id="pinEstadoTexto">Desactivado</span>
