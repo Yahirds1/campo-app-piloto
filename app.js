@@ -802,6 +802,77 @@ function actualizarEstadoConexion() {
   }
 }
 
+/* ---------------- Aprobación de nómina ---------------- */
+
+function urlAprobacionNomina(webhookUrl) {
+  const url = new URL(webhookUrl);
+  if (!url.pathname.endsWith('/webhook/registro-campo-piloto')) {
+    throw new Error('La URL configurada no corresponde al webhook PILOTO.');
+  }
+  url.pathname = url.pathname.replace(
+    /\/webhook\/registro-campo-piloto$/,
+    '/webhook/aprobar-nomina-piloto'
+  );
+  return url.toString();
+}
+
+document.getElementById('btnAprobarNomina').addEventListener('click', async () => {
+  const boton = document.getElementById('btnAprobarNomina');
+  const resultado = document.getElementById('resultadoAprobacion');
+  if (!confirm('¿Aprobar la nómina semanal revisada? Esta acción la guardará en Historial_Pagos y enviará el correo.')) return;
+
+  boton.disabled = true;
+  resultado.style.display = 'block';
+  resultado.style.background = '#FCEFD8';
+  resultado.style.color = '#9A6B00';
+  resultado.textContent = 'Procesando aprobación…';
+
+  try {
+    const config = await getConfig();
+    if (!config.webhookUrl) throw new Error('Configura primero la URL del Webhook.');
+    if (!config.apiKey || config.apiKey.length < 32) {
+      throw new Error('Configura primero la clave de acceso del Webhook.');
+    }
+
+    const resp = await fetch(urlAprobacionNomina(config.webhookUrl), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Campo-Key': config.apiKey
+      },
+      body: JSON.stringify({ aprobadoPor: 'Supervisor PILOTO' })
+    });
+
+    let datos = {};
+    try { datos = await resp.json(); } catch {}
+
+    if (resp.ok) {
+      resultado.style.background = '#E1F0E0';
+      resultado.style.color = '#1E4A38';
+      resultado.textContent = datos.mensaje || 'Nómina aprobada, archivada y notificada.';
+      mostrarToast('Nómina aprobada');
+      return;
+    }
+
+    if (resp.status === 409) {
+      resultado.style.background = '#FCEFD8';
+      resultado.style.color = '#9A6B00';
+      resultado.textContent = datos.mensaje || 'Esta nómina semanal ya fue procesada.';
+      mostrarToast('Nómina ya procesada');
+      return;
+    }
+
+    throw new Error(datos.mensaje || `HTTP ${resp.status}: no se pudo aprobar la nómina.`);
+  } catch (error) {
+    resultado.style.background = '#FBE7E2';
+    resultado.style.color = '#B4432F';
+    resultado.textContent = error.message || 'No se pudo aprobar la nómina.';
+    mostrarToast('Error al aprobar nómina');
+  } finally {
+    boton.disabled = false;
+  }
+});
+
 /* ---------------- Configuración general ---------------- */
 
 async function cargarPantallaConfig() {
