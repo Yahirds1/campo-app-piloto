@@ -1,4 +1,4 @@
-const CACHE_NAME = 'campo-tello-piloto-v2';
+const CACHE_NAME = 'campo-tello-piloto-v3';
 const ARCHIVOS = [
   './',
   './index.html',
