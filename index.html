@@ -88,6 +88,7 @@
     cursor:pointer;background:var(--gris);color:var(--texto);
     display:flex;align-items:center;justify-content:center;gap:8px;
   }
+  a.btn-chico{text-decoration:none;}
   .btn-full-flat{width:100%;}
 
   .lista-item{
@@ -376,6 +377,10 @@
         <h3><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>Código secreto del rancho</h3>
         <input type="password" id="cfgSecreto" placeholder="Ej. una frase larga y privada" autocomplete="new-password">
         <p>Debe ser idéntico al usado al generar los gafetes. Protege que nadie use un QR falso.</p>
+        <a class="btn-chico btn-full-flat" href="admin-gafetes.html" target="_blank" rel="noopener noreferrer">
+          <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3"/></svg>
+          Generar gafetes QR
+        </a>
       </div>
 
       <div class="config-grupo">

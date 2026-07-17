@@ -1,9 +1,11 @@
-const CACHE_NAME = 'campo-tello-piloto-v1';
+const CACHE_NAME = 'campo-tello-piloto-v2';
 const ARCHIVOS = [
   './',
   './index.html',
   './app.js',
   './jsQR.js',
+  './admin-gafetes.html',
+  './qrcode.min.js',
   './manifest.json',
   './icon-192.png',
   './icon-512.png'

@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Gafetes QR PILOTO — Tello Produce</title>
+  <style>
+    :root{
+      --verde:#1e4a38;
+      --oliva:#7c8a50;
+      --crema:#f4efe3;
+      --dorado:#c9a227;
+      --naranja:#f4b183;
+      --rojo:#9c0006;
+      --texto:#24291f;
+      --borde:#e5e1d6;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--crema);color:var(--texto);font-family:"Segoe UI",Arial,sans-serif}
+    header{background:var(--verde);color:#fff;padding:22px}
+    header h1{margin:0;font-size:21px}
+    header p{margin:5px 0 0;color:#dce7df;font-size:13px}
+    .piloto{background:var(--naranja);color:var(--rojo);padding:11px 20px;text-align:center;font-weight:900}
+    .panel{max-width:940px;margin:22px auto;padding:0 18px 32px}
+    .caja{background:#fff;border:1px solid var(--borde);border-radius:12px;padding:19px;margin-bottom:16px}
+    .caja h2{margin:0 0 12px;color:var(--verde);font-size:16px}
+    label{display:block;margin:10px 0 6px;color:var(--oliva);font-size:13px;font-weight:800}
+    input[type=password],textarea{
+      width:100%;padding:12px;border:2px solid var(--borde);border-radius:8px;
+      font:14px inherit;background:#fff;color:var(--texto)
+    }
+    textarea{min-height:125px;resize:vertical}
+    input[type=file]{width:100%;padding:10px;border:1px dashed var(--oliva);border-radius:8px}
+    .ayuda{font-size:12px;color:#73766d;line-height:1.45}
+    .fila{display:grid;grid-template-columns:1.35fr 1fr;gap:18px}
+    .botones{display:flex;gap:10px;flex-wrap:wrap}
+    button,.boton{
+      border:0;border-radius:9px;padding:12px 18px;font:700 14px inherit;cursor:pointer;
+      background:var(--verde);color:#fff;text-decoration:none;display:inline-flex;align-items:center;justify-content:center
+    }
+    button.secundario{background:var(--dorado)}
+    .mensaje{border-radius:9px;padding:12px 14px;margin-bottom:16px;font-weight:700}
+    .mensaje.error{background:#fbe7e2;color:#b4432f}
+    .mensaje.exito{background:#e4f2e8;color:var(--verde)}
+    .grid-gafetes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+    .gafete{background:#fff;border:2px dashed var(--borde);border-radius:11px;padding:14px;text-align:center;break-inside:avoid}
+    .qr{width:132px;height:132px;margin:0 auto 9px;display:flex;align-items:center;justify-content:center}
+    .qr img,.qr canvas{max-width:132px;max-height:132px}
+    .nombre{font-size:15px;font-weight:900;color:var(--verde);overflow-wrap:anywhere}
+    .id{font-size:12px;color:var(--oliva);margin-top:3px}
+    .marca{font-size:10px;color:#9b967f;margin-top:7px;letter-spacing:.7px;text-transform:uppercase}
+    @media(max-width:700px){
+      .fila{grid-template-columns:1fr}
+      .grid-gafetes{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+    @media(max-width:430px){.grid-gafetes{grid-template-columns:1fr}}
+    @media print{
+      header,.piloto,.no-imprimir{display:none!important}
+      body{background:#fff}
+      .panel{max-width:none;margin:0;padding:0}
+      .grid-gafetes{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+      .gafete{border:1px dashed #aaa}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Generador de Gafetes QR — Tello Produce</h1>
+    <p>Herramienta separada para crear los gafetes del ambiente piloto.</p>
+  </header>
+  <div class="piloto">MODO PILOTO — ESTOS GAFETES NO DEBEN USARSE EN PRODUCCIÓN</div>
+
+  <main class="panel">
+    <section class="caja no-imprimir">
+      <h2>1. Código secreto de gafetes</h2>
+      <label for="secreto">Código secreto del rancho</label>
+      <input type="password" id="secreto" minlength="12" autocomplete="new-password"
+        placeholder="Escribe exactamente el mismo secreto guardado en Campo App PILOTO">
+      <p class="ayuda">Debe coincidir letra por letra con el campo “Código secreto del rancho” de la aplicación piloto. No uses la clave X-Campo-Key.</p>
+    </section>
+
+    <section class="caja no-imprimir">
+      <h2>2. Trabajadores piloto</h2>
+      <div class="fila">
+        <div>
+          <label for="csvTexto">Pega el CSV</label>
+          <textarea id="csvTexto" spellcheck="false" placeholder="ID_Trabajador,Nombre&#10;P001,Juan Prueba&#10;P002,Maria Prueba"></textarea>
+        </div>
+        <div>
+          <label for="csvArchivo">O selecciona trabajadores-piloto.csv</label>
+          <input type="file" id="csvArchivo" accept=".csv,text/csv">
+          <p class="ayuda">La herramienta busca las columnas ID_Trabajador y Nombre. Los datos se procesan en este navegador y no se envían a otro servidor.</p>
+        </div>
+      </div>
+      <div class="botones">
+        <button type="button" id="btnGenerar">Generar gafetes</button>
+        <a class="boton" href="./">Volver a Campo App PILOTO</a>
+      </div>
+    </section>
+
+    <div id="mensajes" aria-live="polite"></div>
+    <section id="resultado" aria-label="Gafetes generados"></section>
+
+    <section class="caja no-imprimir" id="cajaImprimir" hidden>
+      <h2>3. Imprimir</h2>
+      <button type="button" class="secundario" id="btnImprimir">Imprimir gafetes</button>
+      <p class="ayuda">Imprime, recorta y lamina los gafetes. Conserva el secreto en un lugar privado.</p>
+    </section>
+  </main>
+
+  <script src="qrcode.min.js"></script>
+  <script>
+    "use strict";
+
+    const MAX_TRABAJADORES = 250;
+
+    function parseCSV(texto) {
+      const filas = [];
+      let fila = [];
+      let campo = "";
+      let entreComillas = false;
+
+      for (let i = 0; i < texto.length; i++) {
+        const caracter = texto[i];
+        const siguiente = texto[i + 1];
+        if (caracter === '"' && entreComillas && siguiente === '"') {
+          campo += '"';
+          i++;
+        } else if (caracter === '"') {
+          entreComillas = !entreComillas;
+        } else if (caracter === "," && !entreComillas) {
+          fila.push(campo.trim());
+          campo = "";
+        } else if ((caracter === "\n" || caracter === "\r") && !entreComillas) {
+          if (caracter === "\r" && siguiente === "\n") i++;
+          fila.push(campo.trim());
+          if (fila.some(valor => valor.length > 0)) filas.push(fila);
+          fila = [];
+          campo = "";
+        } else {
+          campo += caracter;
+        }
+      }
+
+      fila.push(campo.trim());
+      if (fila.some(valor => valor.length > 0)) filas.push(fila);
+      return filas;
+    }
+
+    function normalizarEncabezado(valor) {
+      return String(valor || "").trim().toLowerCase().replace(/\s+/g, "_");
+    }
+
+    function encontrarEncabezado(filas) {
+      for (let i = 0; i < filas.length; i++) {
+        const encabezados = filas[i].map(normalizarEncabezado);
+        const idxId = encabezados.indexOf("id_trabajador");
+        const idxNombre = encabezados.indexOf("nombre");
+        if (idxId !== -1 && idxNombre !== -1) return { filaIndex: i, idxId, idxNombre };
+      }
+      return null;
+    }
+
+    function mostrarMensaje(texto, tipo) {
+      const mensajes = document.getElementById("mensajes");
+      mensajes.replaceChildren();
+      const mensaje = document.createElement("div");
+      mensaje.className = `mensaje ${tipo}`;
+      mensaje.textContent = texto;
+      mensajes.appendChild(mensaje);
+    }
+
+    async function sha256Hex(texto) {
+      const bytes = new TextEncoder().encode(texto);
+      const hash = await crypto.subtle.digest("SHA-256", bytes);
+      return Array.from(new Uint8Array(hash), byte => byte.toString(16).padStart(2, "0")).join("");
+    }
+
+    document.getElementById("csvArchivo").addEventListener("change", async event => {
+      const archivo = event.target.files && event.target.files[0];
+      if (!archivo) return;
+      if (archivo.size > 1024 * 1024) {
+        mostrarMensaje("El archivo CSV excede el máximo permitido de 1 MB.", "error");
+        event.target.value = "";
+        return;
+      }
+      document.getElementById("csvTexto").value = await archivo.text();
+    });
+
+    document.getElementById("btnGenerar").addEventListener("click", async () => {
+      const resultado = document.getElementById("resultado");
+      const cajaImprimir = document.getElementById("cajaImprimir");
+      const secreto = document.getElementById("secreto").value.trim();
+      resultado.replaceChildren();
+      cajaImprimir.hidden = true;
+
+      if (secreto.length < 12) {
+        mostrarMensaje("El código secreto debe tener al menos 12 caracteres.", "error");
+        return;
+      }
+      if (typeof QRCode !== "function") {
+        mostrarMensaje("No se pudo cargar el generador QR. Recarga la página.", "error");
+        return;
+      }
+
+      const filas = parseCSV(document.getElementById("csvTexto").value);
+      const encabezado = encontrarEncabezado(filas);
+      if (!encabezado) {
+        mostrarMensaje('No se encontraron las columnas "ID_Trabajador" y "Nombre".', "error");
+        return;
+      }
+
+      const trabajadores = [];
+      const ids = new Set();
+      for (let i = encabezado.filaIndex + 1; i < filas.length; i++) {
+        const id = String(filas[i][encabezado.idxId] || "").trim();
+        const nombre = String(filas[i][encabezado.idxNombre] || "").trim();
+        if (!id) continue;
+        if (!/^[A-Za-z0-9._-]{1,50}$/.test(id)) {
+          mostrarMensaje(`El ID "${id.slice(0, 50)}" no es válido.`, "error");
+          return;
+        }
+        if (nombre.length > 120) {
+          mostrarMensaje(`El nombre asociado a ${id} es demasiado largo.`, "error");
+          return;
+        }
+        if (ids.has(id)) {
+          mostrarMensaje(`El trabajador ${id} aparece duplicado.`, "error");
+          return;
+        }
+        ids.add(id);
+        trabajadores.push({ id, nombre: nombre || id });
+      }
+
+      if (trabajadores.length === 0) {
+        mostrarMensaje("El CSV no contiene trabajadores válidos.", "error");
+        return;
+      }
+      if (trabajadores.length > MAX_TRABAJADORES) {
+        mostrarMensaje(`Solo se permiten ${MAX_TRABAJADORES} trabajadores por generación.`, "error");
+        return;
+      }
+
+      const grid = document.createElement("div");
+      grid.className = "grid-gafetes";
+      resultado.appendChild(grid);
+
+      for (const trabajador of trabajadores) {
+        const token = (await sha256Hex(`${trabajador.id}:${secreto}`)).slice(0, 8);
+        const payload = JSON.stringify({ i: trabajador.id, t: token });
+        const gafete = document.createElement("article");
+        gafete.className = "gafete";
+        const qr = document.createElement("div");
+        qr.className = "qr";
+        const nombre = document.createElement("div");
+        nombre.className = "nombre";
+        nombre.textContent = trabajador.nombre;
+        const id = document.createElement("div");
+        id.className = "id";
+        id.textContent = trabajador.id;
+        const marca = document.createElement("div");
+        marca.className = "marca";
+        marca.textContent = "Tello Produce · PILOTO";
+        gafete.append(qr, nombre, id, marca);
+        grid.appendChild(gafete);
+        new QRCode(qr, {
+          text: payload,
+          width: 132,
+          height: 132,
+          colorDark: "#1e4a38",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.M
+        });
+      }
+
+      mostrarMensaje(`${trabajadores.length} gafete(s) generado(s) correctamente.`, "exito");
+      cajaImprimir.hidden = false;
+    });
+
+    document.getElementById("btnImprimir").addEventListener("click", () => window.print());
+  </script>
+</body>
+</html>
