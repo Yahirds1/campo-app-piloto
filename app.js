@@ -816,11 +816,32 @@ function urlAprobacionNomina(webhookUrl) {
   return url.toString();
 }
 
+let aprobacionNominaArmada = false;
+let temporizadorAprobacionNomina = null;
+
 document.getElementById('btnAprobarNomina').addEventListener('click', async () => {
   const boton = document.getElementById('btnAprobarNomina');
   const resultado = document.getElementById('resultadoAprobacion');
-  if (!confirm('¿Aprobar la nómina semanal revisada? Esta acción la guardará en Historial_Pagos y enviará el correo.')) return;
 
+  if (!aprobacionNominaArmada) {
+    aprobacionNominaArmada = true;
+    boton.textContent = 'Confirmar aprobación definitiva';
+    resultado.style.display = 'block';
+    resultado.style.background = '#FCEFD8';
+    resultado.style.color = '#9A6B00';
+    resultado.textContent = 'Confirma únicamente si ya revisaste Nomina_Semanal. El segundo toque guardará el historial y enviará el correo.';
+    clearTimeout(temporizadorAprobacionNomina);
+    temporizadorAprobacionNomina = setTimeout(() => {
+      aprobacionNominaArmada = false;
+      boton.textContent = 'Aprobar nómina semanal';
+      resultado.style.display = 'none';
+    }, 15000);
+    return;
+  }
+
+  aprobacionNominaArmada = false;
+  clearTimeout(temporizadorAprobacionNomina);
+  boton.textContent = 'Aprobar nómina semanal';
   boton.disabled = true;
   resultado.style.display = 'block';
   resultado.style.background = '#FCEFD8';
