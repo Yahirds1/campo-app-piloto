@@ -1,8 +1,8 @@
-const CACHE_NAME = 'campo-tello-piloto-v8';
+const CACHE_NAME = 'campo-tello-piloto-v9';
 const ARCHIVOS = [
   './',
   './index.html',
-  './app.js?v=7',
+  './app.js?v=9',
   './admin-nomina.html',
   './jsQR.js',
   './admin-gafetes.html',

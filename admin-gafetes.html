@@ -7,27 +7,27 @@
   <title>Gafetes QR PILOTO — Tello Produce</title>
   <style>
     :root{
-      --verde:#1e4a38;
-      --oliva:#7c8a50;
-      --crema:#f4efe3;
-      --dorado:#c9a227;
-      --naranja:#f4b183;
-      --rojo:#9c0006;
-      --texto:#24291f;
-      --borde:#e5e1d6;
+      --verde:#173f35;
+      --oliva:#64716c;
+      --crema:#eef2f0;
+      --dorado:#8a3b12;
+      --naranja:#fff0d8;
+      --rojo:#a43120;
+      --texto:#24312c;
+      --borde:#dce3df;
     }
     *{box-sizing:border-box}
-    body{margin:0;background:var(--crema);color:var(--texto);font-family:"Segoe UI",Arial,sans-serif}
-    header{background:var(--verde);color:#fff;padding:22px}
+    body{margin:0;background:var(--crema);color:var(--texto);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+    header{background:var(--verde);color:#fff;padding:26px}
     header h1{margin:0;font-size:21px}
     header p{margin:5px 0 0;color:#dce7df;font-size:13px}
-    .piloto{background:var(--naranja);color:var(--rojo);padding:11px 20px;text-align:center;font-weight:900}
+    .piloto{background:var(--naranja);color:#7c4d08;border-bottom:1px solid #e2bd83;padding:10px 20px;text-align:center;font-size:12px;font-weight:850;letter-spacing:.45px}
     .panel{max-width:940px;margin:22px auto;padding:0 18px 32px}
-    .caja{background:#fff;border:1px solid var(--borde);border-radius:12px;padding:19px;margin-bottom:16px}
+    .caja{background:#fff;border:1px solid var(--borde);border-radius:14px;padding:20px;margin-bottom:16px;box-shadow:0 12px 32px rgba(23,63,53,.06)}
     .caja h2{margin:0 0 12px;color:var(--verde);font-size:16px}
     label{display:block;margin:10px 0 6px;color:var(--oliva);font-size:13px;font-weight:800}
     input[type=password],textarea{
-      width:100%;padding:12px;border:2px solid var(--borde);border-radius:8px;
+      width:100%;padding:12px;border:1px solid #bdc8c3;border-radius:8px;
       font:14px inherit;background:#fff;color:var(--texto)
     }
     textarea{min-height:125px;resize:vertical}
@@ -44,7 +44,7 @@
     .mensaje.error{background:#fbe7e2;color:#b4432f}
     .mensaje.exito{background:#e4f2e8;color:var(--verde)}
     .grid-gafetes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
-    .gafete{background:#fff;border:2px dashed var(--borde);border-radius:11px;padding:14px;text-align:center;break-inside:avoid}
+    .gafete{background:#fff;border:1px solid var(--borde);border-top:4px solid var(--verde);border-radius:10px;padding:14px;text-align:center;break-inside:avoid;box-shadow:0 8px 20px rgba(23,63,53,.05)}
     .qr{width:132px;height:132px;margin:0 auto 9px;display:flex;align-items:center;justify-content:center}
     .qr img,.qr canvas{max-width:132px;max-height:132px}
     .nombre{font-size:15px;font-weight:900;color:var(--verde);overflow-wrap:anywhere}
@@ -268,7 +268,7 @@
           text: payload,
           width: 132,
           height: 132,
-          colorDark: "#1e4a38",
+          colorDark: "#173f35",
           colorLight: "#ffffff",
           correctLevel: QRCode.CorrectLevel.M
         });
