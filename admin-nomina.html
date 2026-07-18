@@ -5,33 +5,63 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' https://telloproduce.app.n8n.cloud; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'">
-  <title>Aprobación de Nómina PILOTO</title>
+  <title>Administración de Nómina PILOTO</title>
   <style>
-    :root{font-family:system-ui,-apple-system,sans-serif;color:#24291f;background:#f8f1e8}
+    :root{
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+      color:#24312c;
+      background:#eef2f0;
+      --verde:#173f35;
+      --verde-claro:#e7f0ec;
+      --borde:#dce3df;
+      --texto-suave:#64716c;
+      --alerta:#8b5a12;
+      --error:#a43120;
+    }
     *{box-sizing:border-box}
-    body{margin:0;min-height:100vh;display:grid;place-items:center;padding:20px}
-    main{width:min(520px,100%);background:#fff;border-radius:18px;box-shadow:0 12px 36px #3d2a181f;overflow:hidden}
-    header{background:#1e4a38;color:#fff;padding:22px 24px}
-    header p{margin:4px 0 0;color:#d8e6dc;font-size:14px}
-    section{padding:22px 24px}
-    .alerta{background:#fff0c7;color:#803900;border-left:5px solid #e69b00;padding:12px;border-radius:8px;margin-bottom:18px;font-weight:700}
-    label{display:block;font-weight:700;margin:14px 0 6px}
-    input{width:100%;padding:12px;border:1px solid #cfc8bb;border-radius:9px;font:inherit}
-    button{width:100%;margin-top:18px;border:0;border-radius:10px;padding:14px 16px;background:#a43d12;color:#fff;font:inherit;font-weight:800;cursor:pointer}
-    button:disabled{opacity:.55;cursor:wait}
-    #resultado{display:none;margin-top:16px;padding:12px;border-radius:9px;font-weight:650;white-space:pre-wrap;word-break:break-word}
-    .nota{font-size:13px;color:#69695f;line-height:1.45}
-    a{color:#1e4a38}
+    body{margin:0;min-height:100vh;padding:26px 16px}
+    main{width:min(680px,100%);margin:0 auto;background:#fff;border:1px solid var(--borde);border-radius:14px;box-shadow:0 14px 38px #173f3514;overflow:hidden}
+    header{background:var(--verde);color:#fff;padding:28px 30px}
+    header .marca{font-size:12px;letter-spacing:1.4px;text-transform:uppercase;color:#bdd0c8;font-weight:800}
+    header h1{font-size:24px;margin:7px 0 4px}
+    header p{margin:0;color:#d9e4df;font-size:14px}
+    section{padding:24px 30px}
+    .aviso{background:#f7f8f7;border-left:4px solid #71847b;padding:12px 14px;border-radius:6px;margin-bottom:20px;font-size:14px}
+    .grupo{border-top:1px solid var(--borde);padding-top:20px;margin-top:22px}
+    .grupo h2{font-size:16px;margin:0 0 6px;color:var(--verde)}
+    label{display:block;font-size:13px;font-weight:750;margin:14px 0 6px}
+    input,select{width:100%;padding:12px;border:1px solid #bdc8c3;border-radius:8px;background:#fff;color:#24312c;font:inherit}
+    input:focus,select:focus{outline:3px solid #d9e8e1;border-color:#55786a}
+    .fila{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end}
+    button{border:0;border-radius:8px;padding:12px 16px;background:var(--verde);color:#fff;font:inherit;font-weight:750;cursor:pointer}
+    button.secundario{background:#eef3f1;color:var(--verde);border:1px solid #cad7d1}
+    button.aprobar{width:100%;margin-top:18px;background:#8a3b12;padding:14px 16px}
+    button:disabled{opacity:.55;cursor:not-allowed}
+    .detalle{display:none;margin-top:12px;padding:14px;background:#f7f8f7;border:1px solid var(--borde);border-radius:8px;font-size:13px;line-height:1.6}
+    .etiqueta{display:inline-block;padding:4px 7px;border-radius:4px;background:#e8efec;color:var(--verde);font-size:11px;font-weight:800;letter-spacing:.4px}
+    .etiqueta.tardia{background:#fff0d8;color:#82520b}
+    #resultado{display:none;margin-top:16px;padding:13px;border-radius:8px;font-weight:650;white-space:pre-wrap;word-break:break-word}
+    .nota{font-size:12px;color:var(--texto-suave);line-height:1.5}
+    .recordar{display:flex;align-items:center;gap:8px;font-weight:500}
+    .recordar input{width:auto}
+    a{color:var(--verde)}
+    @media(max-width:560px){
+      body{padding:0}
+      main{border:0;border-radius:0;min-height:100vh}
+      header,section{padding-left:20px;padding-right:20px}
+      .fila{grid-template-columns:1fr}
+    }
   </style>
 </head>
 <body>
   <main>
     <header>
-      <strong>TELLO PRODUCE · ADMINISTRACIÓN</strong>
-      <p>Aprobación de nómina semanal — entorno PILOTO</p>
+      <div class="marca">Tello Produce · Administración</div>
+      <h1>Aprobación de nómina</h1>
+      <p>Semanas pendientes y aprobaciones tardías · entorno PILOTO</p>
     </header>
     <section>
-      <div class="alerta">Solo el responsable autorizado debe usar esta pantalla.</div>
+      <div class="aviso">Solo el responsable autorizado debe aprobar una nómina. Cada aprobación conserva semana, responsable, fecha y estado del correo.</div>
 
       <label for="webhook">Webhook administrativo</label>
       <input id="webhook" type="url" value="https://telloproduce.app.n8n.cloud/webhook/aprobar-nomina-piloto" autocomplete="url">
@@ -42,10 +72,27 @@
       <label for="responsable">Nombre del responsable</label>
       <input id="responsable" type="text" maxlength="120" value="Supervisor PILOTO" autocomplete="name">
 
-      <p class="nota">La clave de captura de campo no funciona aquí. Este dispositivo puede recordarla únicamente si marcas la casilla.</p>
-      <label class="nota"><input id="recordar" type="checkbox" style="width:auto"> Recordar la clave administrativa en este dispositivo</label>
+      <label class="recordar nota">
+        <input id="recordar" type="checkbox">
+        Recordar la clave únicamente en este dispositivo
+      </label>
 
-      <button id="aprobar" type="button">Aprobar nómina semanal</button>
+      <div class="grupo">
+        <h2>Semanas pendientes</h2>
+        <p class="nota">Incluye borradores sin aprobar y correos pendientes de reintento. Las semanas ya enviadas no aparecen.</p>
+        <div class="fila">
+          <div>
+            <label for="semana">Semana para aprobar</label>
+            <select id="semana" disabled>
+              <option value="">Carga las semanas pendientes</option>
+            </select>
+          </div>
+          <button id="cargar" class="secundario" type="button">Cargar pendientes</button>
+        </div>
+        <div id="detalle" class="detalle"></div>
+      </div>
+
+      <button id="aprobar" class="aprobar" type="button" disabled>Selecciona una semana</button>
       <div id="resultado" role="status" aria-live="polite"></div>
       <p class="nota"><a href="./">Volver a Registro de Campo</a></p>
     </section>
@@ -57,8 +104,12 @@
     const clave = document.getElementById('clave');
     const responsable = document.getElementById('responsable');
     const recordar = document.getElementById('recordar');
+    const semana = document.getElementById('semana');
+    const cargar = document.getElementById('cargar');
     const aprobar = document.getElementById('aprobar');
+    const detalle = document.getElementById('detalle');
     const resultado = document.getElementById('resultado');
+    let semanas = [];
     let confirmacionArmada = false;
     let confirmacionTimer = null;
 
@@ -72,8 +123,8 @@
       resultado.style.display = 'block';
       resultado.textContent = String(mensaje || '');
       const estilos = {
-        ok: ['#e1f0e0', '#1e4a38'],
-        espera: ['#fcefd8', '#8a5a00'],
+        ok: ['#e3efe9', '#173f35'],
+        espera: ['#fff0d8', '#7c4d08'],
         error: ['#fbe7e2', '#a43120']
       };
       const colores = estilos[tipo] || estilos.error;
@@ -81,11 +132,13 @@
       resultado.style.color = colores[1];
     }
 
-    function validar() {
+    function validarBase() {
       const url = new URL(webhook.value.trim());
-      if (url.protocol !== 'https:' ||
-          url.hostname !== 'telloproduce.app.n8n.cloud' ||
-          url.pathname !== '/webhook/aprobar-nomina-piloto') {
+      if (
+        url.protocol !== 'https:' ||
+        url.hostname !== 'telloproduce.app.n8n.cloud' ||
+        url.pathname !== '/webhook/aprobar-nomina-piloto'
+      ) {
         throw new Error('La URL no corresponde al webhook administrativo PILOTO.');
       }
       if (clave.value.trim().length < 32) {
@@ -97,61 +150,177 @@
       return url.toString();
     }
 
+    function guardarClave() {
+      if (recordar.checked) {
+        localStorage.setItem('nominaAdminKeyPiloto', clave.value.trim());
+      } else {
+        localStorage.removeItem('nominaAdminKeyPiloto');
+      }
+    }
+
+    async function solicitar(body) {
+      const url = validarBase();
+      guardarClave();
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Nomina-Key': clave.value.trim()
+        },
+        body: JSON.stringify(body)
+      });
+      let data = {};
+      try { data = await response.json(); } catch (_) {}
+      return { response, data };
+    }
+
+    function dinero(valor) {
+      return Number(valor || 0).toLocaleString('es-MX', {
+        style: 'currency',
+        currency: 'MXN'
+      });
+    }
+
+    function actualizarDetalle() {
+      const seleccionada = semanas.find(item => item.idSemana === semana.value);
+      if (!seleccionada) {
+        detalle.style.display = 'none';
+        detalle.replaceChildren();
+        aprobar.disabled = true;
+        aprobar.textContent = 'Selecciona una semana';
+        return;
+      }
+
+      const tardia = seleccionada.aprobacionTardia;
+      detalle.style.display = 'block';
+      detalle.replaceChildren();
+
+      const etiqueta = document.createElement('span');
+      etiqueta.className = 'etiqueta' + (tardia ? ' tardia' : '');
+      etiqueta.textContent = tardia ? 'APROBACIÓN TARDÍA' : seleccionada.estado;
+      detalle.append(etiqueta, document.createElement('br'));
+
+      function agregarLinea(titulo, valor) {
+        const strong = document.createElement('strong');
+        strong.textContent = titulo + ': ';
+        detalle.append(strong, document.createTextNode(String(valor)), document.createElement('br'));
+      }
+
+      agregarLinea('Periodo', seleccionada.semana);
+      agregarLinea('Trabajadores', seleccionada.trabajadores);
+      agregarLinea('Total estimado', dinero(seleccionada.total));
+      if (tardia) agregarLinea('Días posteriores al cierre', seleccionada.diasRetraso);
+
+      aprobar.disabled = false;
+      aprobar.textContent = tardia ? 'Aprobar semana atrasada' : 'Aprobar nómina semanal';
+    }
+
+    async function cargarPendientes() {
+      cargar.disabled = true;
+      aprobar.disabled = true;
+      cargar.textContent = 'Consultando…';
+      mostrar('Consultando semanas pendientes…', 'espera');
+      try {
+        const { response, data } = await solicitar({
+          action: 'listar_pendientes',
+          aprobadoPor: responsable.value.trim()
+        });
+        if (!response.ok) {
+          throw new Error(data.mensaje || 'Error HTTP ' + response.status);
+        }
+
+        semanas = Array.isArray(data.semanas) ? data.semanas : [];
+        semana.replaceChildren();
+        if (!semanas.length) {
+          semana.disabled = true;
+          semana.add(new Option('No hay semanas pendientes', ''));
+          detalle.style.display = 'none';
+          mostrar(data.mensaje || 'No hay semanas pendientes de aprobación.', 'ok');
+        } else {
+          semana.disabled = false;
+          semana.add(new Option('Selecciona una semana', ''));
+          for (const item of semanas) {
+            const texto = item.semana +
+              ' · ' + item.trabajadores + ' trabajador(es)' +
+              ' · ' + dinero(item.total) +
+              (item.aprobacionTardia ? ' · ATRASADA' : '');
+            semana.add(new Option(texto, item.idSemana));
+          }
+          mostrar('Se encontraron ' + semanas.length + ' semana(s) pendiente(s).', 'ok');
+        }
+        actualizarDetalle();
+      } catch (error) {
+        mostrar(error.message || 'No se pudieron cargar las semanas.', 'error');
+      } finally {
+        cargar.disabled = false;
+        cargar.textContent = 'Cargar pendientes';
+      }
+    }
+
+    semana.addEventListener('change', actualizarDetalle);
+    cargar.addEventListener('click', cargarPendientes);
+
     aprobar.addEventListener('click', async () => {
+      const seleccionada = semanas.find(item => item.idSemana === semana.value);
+      if (!seleccionada) {
+        mostrar('Selecciona una semana pendiente.', 'error');
+        return;
+      }
+
       if (!confirmacionArmada) {
-        try { validar(); } catch (error) { mostrar(error.message, 'error'); return; }
+        try { validarBase(); } catch (error) { mostrar(error.message, 'error'); return; }
         confirmacionArmada = true;
         aprobar.textContent = 'Confirmar aprobación definitiva';
-        mostrar('Segundo paso: confirma solo si ya revisaste Nomina_Semanal.', 'espera');
+        mostrar(
+          'Segundo paso: confirma la aprobación de ' + seleccionada.semana +
+          '. Esta acción quedará registrada a nombre de ' + responsable.value.trim() + '.',
+          'espera'
+        );
         clearTimeout(confirmacionTimer);
         confirmacionTimer = setTimeout(() => {
           confirmacionArmada = false;
-          aprobar.textContent = 'Aprobar nómina semanal';
+          actualizarDetalle();
           mostrar('La confirmación venció. Vuelve a iniciar si deseas aprobar.', 'espera');
-        }, 15000);
+        }, 20000);
         return;
       }
 
       confirmacionArmada = false;
       clearTimeout(confirmacionTimer);
       aprobar.disabled = true;
+      cargar.disabled = true;
       aprobar.textContent = 'Procesando…';
-      mostrar('Bloqueando la semana y procesando la aprobación…', 'espera');
+      mostrar('Bloqueando la semana, registrando la aprobación y enviando el correo…', 'espera');
 
       try {
-        const url = validar();
-        if (recordar.checked) {
-          localStorage.setItem('nominaAdminKeyPiloto', clave.value.trim());
-        } else {
-          localStorage.removeItem('nominaAdminKeyPiloto');
-        }
-        const response = await fetch(url, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-Nomina-Key': clave.value.trim()
-          },
-          body: JSON.stringify({ aprobadoPor: responsable.value.trim() })
+        const { response, data } = await solicitar({
+          action: 'aprobar',
+          idSemana: seleccionada.idSemana,
+          semana: seleccionada.semana,
+          aprobadoPor: responsable.value.trim()
         });
-        let data = {};
-        try { data = await response.json(); } catch (_) {}
 
         if (response.ok) {
           mostrar(data.mensaje || 'Nómina aprobada y correo enviado.', 'ok');
+          await cargarPendientes();
         } else if (response.status === 409) {
           mostrar(data.mensaje || 'La semana ya fue procesada o está ocupada.', 'espera');
+          await cargarPendientes();
         } else if (response.status === 202) {
-          mostrar(data.mensaje || 'Historial guardado; el correo quedó pendiente de reintento.', 'espera');
+          mostrar(data.mensaje || 'Historial guardado; el correo quedó pendiente.', 'espera');
+          await cargarPendientes();
         } else {
           throw new Error(data.mensaje || 'Error HTTP ' + response.status);
         }
       } catch (error) {
         mostrar(error.message || 'No se pudo aprobar la nómina.', 'error');
       } finally {
-        aprobar.disabled = false;
-        aprobar.textContent = 'Aprobar nómina semanal';
+        cargar.disabled = false;
+        actualizarDetalle();
       }
     });
+
+    if (guardada) cargarPendientes();
   </script>
 </body>
 </html>
