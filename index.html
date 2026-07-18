@@ -384,6 +384,474 @@
       </div>
 
       <div class="config-grupo">
+        <h3><svg class="icon" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>PIN de acceso</h3>
+        <div class="fila-estado-pin">
+          <span class="estado-txt" id="pinEstadoTexto">Desactivado</span>
+        </div>
+        <div class="fila-botones">
+          <button class="btn-chico" id="btnConfigurarPin">Configurar PIN</button>
+          <button class="btn-chico" id="btnQuitarPin" style="display:none;">Quitar PIN</button>
+        </div>
+        <p>Pide un PIN de 4 dígitos cada vez que se abre la app, para que solo el supervisor capture datos.</p>
+      </div>
+
+      <div class="config-grupo">
+        <h3><svg class="icon" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"/><circle cx="17" cy="9" r="2.4"/><path d="M15.5 14.3c2.6.4 4.5 2.3 4.5 5.2"/></svg>Trabajadores</h3>
+        <p id="infoTrabajadores">0 trabajadores cargados.</p>
+        <button class="btn-chico btn-full-flat" id="btnImportarTrabajadores">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 19h14"/></svg>Importar CSV de Trabajadores
+        </button>
+        <input type="file" id="fileTrabajadores" accept=".csv" class="archivo-oculto">
+      </div>
+
+      <div class="config-grupo">
+        <h3><svg class="icon" viewBox="0 0 24 24"><path d="M4 20C4 10 12 4 20 4c0 8-6 16-16 16z"/><path d="M6 18C10 14 14 10 18 6"/></svg>Cultivos</h3>
+        <p id="infoCultivos">0 cultivos cargados.</p>
+        <button class="btn-chico btn-full-flat" id="btnImportarCultivos">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 19h14"/></svg>Importar CSV de Cultivos
+        </button>
+        <input type="file" id="fileCultivos" accept=".csv" class="archivo-oculto">
+      </div>
+
+      <button class="btn-grande btn-secundario" id="btnGuardarConfig">Guardar configuración</button>
+    </section>
+
+  </main>
+
+  <nav class="tabbar">
+    <button class="tab activo" data-pantalla="inicio">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg>Inicio
+    </button>
+    <button class="tab" data-pantalla="historial">
+      <svg class="icon" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 3h6v3H9z"/><path d="M8 11h8M8 15h8"/></svg>Historial
+    </button>
+    <button class="tab" data-pantalla="config">
+      <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>Ajustes
+    </button>
+  </nav>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<!-- PANTALLA DE BLOQUEO -->
+<div id="pantalla-bloqueo">
+  <div class="bloqueo-logo">
+    <svg class="icon" viewBox="0 0 24 24"><path d="M4 20C4 10 12 4 20 4c0 8-6 16-16 16z"/><path d="M6 18C10 14 14 10 18 6"/></svg>
+    <span class="bloqueo-titulo">TELLO PRODUCE</span>
+  </div>
+  <div class="bloqueo-sub">Ingresa el PIN para continuar</div>
+  <div class="puntos-pin" id="puntosPin">
+    <div class="punto-pin"></div><div class="punto-pin"></div><div class="punto-pin"></div><div class="punto-pin"></div>
+  </div>
+  <div class="teclado-numerico" id="tecladoBloqueo"></div>
+  <div class="error-pin" id="errorPinBloqueo"></div>
+</div>
+
+<!-- PANTALLA CONFIGURAR PIN -->
+<div id="pantalla-pin-setup">
+  <div class="bloqueo-logo">
+    <svg class="icon" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+    <span class="bloqueo-titulo">CONFIGURAR PIN</span>
+  </div>
+  <div class="bloqueo-sub" id="setupSub">Escribe un nuevo PIN de 4 dígitos</div>
+  <div class="puntos-pin" id="puntosPinSetup">
+    <div class="punto-pin"></div><div class="punto-pin"></div><div class="punto-pin"></div><div class="punto-pin"></div>
+  </div>
+  <div class="teclado-numerico" id="tecladoSetup"></div>
+  <div class="error-pin" id="errorPinSetup"></div>
+  <button class="link-tenue" id="btnCancelarSetupPin">Cancelar</button>
+</div>
+
+<script src="jsQR.js"></script>
+<script src="app.js?v=7"></script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; connect-src https: http://localhost:*; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta name="referrer" content="no-referrer">
+<title>Registro de Campo PILOTO — Tello Produce</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#8A3B12">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+  :root{
+    --verde:#8A3B12;
+    --oliva:#D97706;
+    --crema:#FFF7ED;
+    --dorado:#F59E0B;
+    --texto:#24291F;
+    --gris:#F2F2F0;
+    --borde:#E5E1D6;
+    --rojo:#B4432F;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;height:100%;}
+  body{
+    font-family:'Segoe UI', Arial, sans-serif;
+    background:var(--crema);
+    color:var(--texto);
+    overscroll-behavior:none;
+    -webkit-tap-highlight-color:transparent;
+  }
+  #app{max-width:480px;margin:0 auto;min-height:100vh;background:#FFFFFF;display:flex;flex-direction:column;}
+  .icon{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-4px;}
+  .icon-grande{width:30px;height:30px;}
+
+  header{
+    background:var(--verde);
+    color:#fff;
+    padding:16px 20px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    position:sticky;top:0;z-index:10;
+  }
+  header .marca{display:flex;align-items:center;gap:10px;}
+  header .marca .icon{width:26px;height:26px;color:var(--dorado);}
+  header .titulo{font-size:17px;font-weight:700;letter-spacing:.3px;}
+  header .sub{font-size:11px;color:#C9D4C4;margin-top:2px;}
+  header .acciones-header{display:flex;align-items:center;gap:10px;}
+  .btn-icono-header{
+    background:rgba(255,255,255,.12);border:none;color:#fff;width:32px;height:32px;border-radius:8px;
+    display:flex;align-items:center;justify-content:center;cursor:pointer;
+  }
+  .estado-conexion{
+    font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;
+    display:flex;align-items:center;gap:5px;
+  }
+  .estado-conexion.online{background:rgba(255,255,255,.15);color:#CFEAD0;}
+  .estado-conexion.offline{background:rgba(180,67,47,.35);color:#FFDAD0;}
+  .estado-conexion .dot{width:7px;height:7px;border-radius:50%;background:currentColor;}
+
+  main{flex:1;padding:20px;padding-bottom:100px;}
+  .pantalla{display:none;}
+  .pantalla.activa{display:block;}
+
+  .tarjeta{background:var(--crema);border-left:4px solid var(--verde);border-radius:8px;padding:16px;margin-bottom:14px;}
+  .tarjeta.dorada{border-left-color:var(--dorado);}
+  .tarjeta .lbl{font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--oliva);font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:6px;}
+  .tarjeta .num{font-size:28px;font-weight:800;color:var(--verde);}
+
+  .fila-tarjetas{display:flex;gap:12px;}
+  .fila-tarjetas .tarjeta{flex:1;margin-bottom:0;}
+
+  .btn-grande{
+    width:100%;padding:22px;border:none;border-radius:14px;
+    font-size:18px;font-weight:700;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;gap:10px;
+    margin-top:18px;transition:transform .08s ease;
+  }
+  .btn-grande:active{transform:scale(.97);}
+  .btn-primario{background:var(--verde);color:#fff;}
+  .btn-secundario{background:var(--gris);color:var(--texto);}
+  .btn-dorado{background:var(--dorado);color:#fff;}
+  .btn-peligro{background:var(--rojo);color:#fff;}
+  .btn-grande.compacto{padding:14px;font-size:15px;margin-top:10px;}
+  .btn-chico{
+    padding:12px 16px;border:none;border-radius:10px;font-size:14px;font-weight:700;
+    cursor:pointer;background:var(--gris);color:var(--texto);
+    display:flex;align-items:center;justify-content:center;gap:8px;
+  }
+  a.btn-chico{text-decoration:none;}
+  .btn-full-flat{width:100%;}
+
+  .lista-item{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:14px;border-bottom:1px solid var(--borde);cursor:pointer;
+  }
+  .lista-item:last-child{border-bottom:none;}
+  .lista-item .nombre{font-weight:700;font-size:15px;}
+  .lista-item .detalle{font-size:12px;color:var(--oliva);margin-top:2px;}
+  .badge{font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;white-space:nowrap;}
+  .badge.pendiente{background:#FCEFD8;color:#9A6B00;}
+  .badge.ok{background:#DCEEDD;color:#1E4A38;}
+  .badge.anulado{background:#F4DAD3;color:#B4432F;}
+
+  #video-wrap{position:relative;width:100%;border-radius:14px;overflow:hidden;background:#000;aspect-ratio:1/1;}
+  #video{width:100%;height:100%;object-fit:cover;}
+  .marco-scan{
+    position:absolute;inset:14%;border:3px solid var(--dorado);border-radius:16px;
+    box-shadow:0 0 0 2000px rgba(0,0,0,.35);
+  }
+  .scan-hint{text-align:center;color:var(--oliva);font-size:13px;margin-top:14px;}
+
+  .trabajador-confirmado{
+    background:var(--verde);color:#fff;border-radius:14px;padding:20px;text-align:center;margin-bottom:18px;
+  }
+  .trabajador-confirmado .nombre{font-size:22px;font-weight:800;}
+  .trabajador-confirmado .id{font-size:12px;color:#C9D4C4;margin-top:2px;}
+
+  label{display:block;font-size:13px;font-weight:700;color:var(--oliva);text-transform:uppercase;letter-spacing:.4px;margin:16px 0 6px;}
+  select, input[type=number]{
+    width:100%;padding:14px;border:2px solid var(--borde);border-radius:10px;font-size:17px;
+    background:#fff;color:var(--texto);
+  }
+  select:focus, input:focus{outline:none;border-color:var(--verde);}
+  select:disabled, input:disabled{background:var(--gris);color:#9A9A90;}
+
+  .stepper{display:flex;align-items:center;gap:10px;}
+  .stepper button{
+    width:52px;height:52px;border-radius:10px;border:none;background:var(--gris);
+    font-size:24px;font-weight:700;color:var(--verde);cursor:pointer;flex-shrink:0;
+  }
+  .stepper button:disabled{opacity:.4;}
+  .stepper input{text-align:center;font-weight:800;font-size:20px;}
+
+  .campo-jugo{display:none;}
+  .campo-jugo.visible{display:block;}
+
+  nav.tabbar{
+    position:fixed;bottom:0;left:0;right:0;max-width:480px;margin:0 auto;
+    background:#fff;border-top:1px solid var(--borde);
+    display:flex;padding:8px 6px calc(8px + env(safe-area-inset-bottom));
+  }
+  nav.tabbar button{
+    flex:1;background:none;border:none;padding:8px 4px;display:flex;flex-direction:column;
+    align-items:center;gap:4px;font-size:11px;font-weight:700;color:#9A9A90;cursor:pointer;
+  }
+  nav.tabbar button.activo{color:var(--verde);}
+
+  .mensaje-error{background:#FBE7E2;color:var(--rojo);border-radius:10px;padding:14px;font-size:14px;margin-bottom:14px;font-weight:600;}
+  .mensaje-ok{background:#E1F0E0;color:var(--verde);border-radius:10px;padding:14px;font-size:14px;margin-bottom:14px;font-weight:600;}
+
+  .toast{
+    position:fixed;bottom:90px;left:50%;transform:translateX(-50%);
+    background:var(--verde);color:#fff;padding:14px 22px;border-radius:30px;font-size:14px;font-weight:700;
+    box-shadow:0 6px 20px rgba(0,0,0,.25);z-index:50;opacity:0;pointer-events:none;transition:opacity .25s, bottom .25s;
+    display:flex;align-items:center;gap:8px;max-width:90%;
+  }
+  .toast.mostrar{opacity:1;bottom:100px;}
+
+  .config-grupo{margin-bottom:22px;}
+  .config-grupo h3{font-size:14px;color:var(--verde);margin:0 0 8px;display:flex;align-items:center;gap:8px;}
+  .config-grupo p{font-size:12px;color:#8A8A80;margin:6px 0 0;}
+  input[type=text], input[type=url]{
+    width:100%;padding:12px;border:2px solid var(--borde);border-radius:10px;font-size:14px;
+  }
+  .archivo-oculto{display:none;}
+  .empty-state{text-align:center;padding:50px 20px;color:#9A9A90;}
+  .empty-state .icon{width:40px;height:40px;margin-bottom:10px;color:#C9C4B4;}
+  .fila-estado-pin{display:flex;align-items:center;justify-content:space-between;background:var(--gris);padding:12px 14px;border-radius:10px;font-size:13px;font-weight:700;}
+  .fila-estado-pin .estado-txt{display:flex;align-items:center;gap:8px;}
+  .fila-botones{display:flex;gap:10px;margin-top:10px;}
+  .fila-botones .btn-chico{flex:1;}
+
+  /* Pantalla de bloqueo / teclado numérico */
+  #pantalla-bloqueo, #pantalla-pin-setup{
+    position:fixed;inset:0;background:var(--verde);z-index:100;
+    display:none;flex-direction:column;align-items:center;justify-content:center;
+    padding:24px;color:#fff;
+  }
+  #pantalla-bloqueo.activa, #pantalla-pin-setup.activa{display:flex;}
+  .bloqueo-logo{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
+  .bloqueo-logo .icon{width:30px;height:30px;color:var(--dorado);}
+  .bloqueo-titulo{font-size:17px;font-weight:800;letter-spacing:.5px;}
+  .bloqueo-sub{font-size:13px;color:#C9D4C4;margin-top:26px;margin-bottom:20px;text-align:center;}
+  .puntos-pin{display:flex;gap:14px;margin-bottom:30px;}
+  .punto-pin{width:16px;height:16px;border-radius:50%;border:2px solid #C9D4C4;}
+  .punto-pin.lleno{background:var(--dorado);border-color:var(--dorado);}
+  .teclado-numerico{display:grid;grid-template-columns:repeat(3, 70px);gap:16px;}
+  .tecla{
+    width:70px;height:70px;border-radius:50%;border:none;background:rgba(255,255,255,.1);
+    color:#fff;font-size:24px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  }
+  .tecla:active{background:rgba(255,255,255,.25);}
+  .tecla.vacia{background:transparent;cursor:default;}
+  .error-pin{color:#FFB0A0;font-size:13px;font-weight:700;margin-top:16px;min-height:18px;}
+  .link-tenue{background:none;border:none;color:#C9D4C4;font-size:12px;margin-top:24px;text-decoration:underline;cursor:pointer;}
+
+  /* Detalle / edición de registro */
+  .detalle-header{background:var(--verde);color:#fff;border-radius:14px;padding:18px;margin-bottom:16px;}
+  .detalle-header .nombre{font-size:19px;font-weight:800;}
+  .detalle-header .meta{font-size:12px;color:#C9D4C4;margin-top:4px;}
+  .aviso-anulado{background:#F4DAD3;color:var(--rojo);border-radius:10px;padding:14px;font-size:13px;font-weight:600;margin-top:6px;}
+  .pilot-banner{
+    background:#FDE68A;color:#7C2D12;border-bottom:2px solid #F59E0B;
+    padding:9px 16px;text-align:center;font-size:12px;font-weight:900;
+    letter-spacing:.4px;
+  }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <header>
+    <div class="marca">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M4 20C4 10 12 4 20 4c0 8-6 16-16 16z"/><path d="M6 18C10 14 14 10 18 6"/></svg>
+      <div>
+        <div class="titulo">Registro de Campo · PILOTO</div>
+        <div class="sub">Tello Produce · Solo pruebas</div>
+      </div>
+    </div>
+    <div class="acciones-header">
+      <button class="btn-icono-header" id="btnBloquearAhora" title="Bloquear">
+        <svg class="icon" style="width:16px;height:16px;" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+      </button>
+      <div class="estado-conexion offline" id="estadoConexion"><span class="dot"></span><span id="estadoTexto">Sin señal</span></div>
+    </div>
+  </header>
+  <div class="pilot-banner">MODO PILOTO — NO USAR PARA REGISTROS NI PAGOS REALES</div>
+
+  <main>
+
+    <!-- INICIO -->
+    <section class="pantalla activa" id="pantalla-inicio">
+      <div class="fila-tarjetas">
+        <div class="tarjeta">
+          <div class="lbl"><svg class="icon" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 3h6v3H9z"/></svg>Pendientes</div>
+          <div class="num" id="contPendientes">0</div>
+        </div>
+        <div class="tarjeta dorada">
+          <div class="lbl"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.2c0-1 1-1.7 2.5-1.7s2.5.8 2.5 1.8-1 1.5-2.5 1.7-2.5.9-2.5 1.9 1 1.8 2.5 1.8 2.5-.7 2.5-1.7"/></svg>Hoy</div>
+          <div class="num" id="contHoy">0</div>
+        </div>
+      </div>
+
+      <button class="btn-grande btn-primario" id="btnEscanear">
+        <svg class="icon icon-grande" viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>
+        Escanear trabajador
+      </button>
+      <button class="btn-grande btn-dorado" id="btnSincronizar">
+        <svg class="icon icon-grande" viewBox="0 0 24 24"><path d="M4 4v5h5"/><path d="M20 20v-5h-5"/><path d="M5.5 9a7 7 0 0 1 12-3.5L20 8"/><path d="M18.5 15a7 7 0 0 1-12 3.5L4 16"/></svg>
+        Sincronizar ahora
+      </button>
+
+      <div id="avisoRoster" class="mensaje-error" style="display:none;margin-top:18px;">
+        No hay trabajadores cargados. Ve a Ajustes → Importar Trabajadores antes de salir al campo.
+      </div>
+    </section>
+
+    <!-- ESCANEAR -->
+    <section class="pantalla" id="pantalla-escanear">
+      <div id="video-wrap">
+        <video id="video" playsinline muted></video>
+        <div class="marco-scan"></div>
+      </div>
+      <div class="scan-hint">Apunta la cámara al gafete del trabajador</div>
+      <div id="errorEscaneo"></div>
+      <button class="btn-grande btn-secundario" id="btnCancelarScan">Cancelar</button>
+    </section>
+
+    <!-- CAPTURA -->
+    <section class="pantalla" id="pantalla-captura">
+      <div class="trabajador-confirmado">
+        <div class="nombre" id="capturaNombre">—</div>
+        <div class="id" id="capturaId">—</div>
+      </div>
+
+      <label>Cultivo</label>
+      <select id="selCultivo"></select>
+
+      <label>Cajas aprobadas</label>
+      <div class="stepper">
+        <button type="button" data-target="inpCajasAprobadas" data-delta="-1">−</button>
+        <input type="number" id="inpCajasAprobadas" value="0" min="0" max="500" step="1" inputmode="numeric">
+        <button type="button" data-target="inpCajasAprobadas" data-delta="1">+</button>
+      </div>
+
+      <div class="campo-jugo" id="campoJugo">
+        <label>Jarras de jugo</label>
+        <div class="stepper">
+          <button type="button" data-target="inpJarrasJugo" data-delta="-1">−</button>
+          <input type="number" id="inpJarrasJugo" value="0" min="0" max="200" step="1" inputmode="numeric">
+          <button type="button" data-target="inpJarrasJugo" data-delta="1">+</button>
+        </div>
+      </div>
+
+      <label>Horas extra</label>
+      <div class="stepper">
+        <button type="button" data-target="inpHorasExtra" data-delta="-0.5">−</button>
+        <input type="number" id="inpHorasExtra" value="0" min="0" max="24" step="0.5" inputmode="decimal">
+        <button type="button" data-target="inpHorasExtra" data-delta="0.5">+</button>
+      </div>
+
+      <button class="btn-grande btn-primario" id="btnGuardarRegistro">Guardar registro</button>
+      <button class="btn-grande btn-secundario" id="btnCancelarCaptura">Cancelar</button>
+    </section>
+
+    <!-- PENDIENTES / HISTORIAL -->
+    <section class="pantalla" id="pantalla-historial">
+      <div id="listaHistorial"></div>
+    </section>
+
+    <!-- DETALLE / EDITAR / ANULAR -->
+    <section class="pantalla" id="pantalla-detalle">
+      <div class="detalle-header">
+        <div class="nombre" id="detalleNombre">—</div>
+        <div class="meta" id="detalleMeta">—</div>
+      </div>
+
+      <div id="bloqueEditable">
+        <label>Cultivo</label>
+        <select id="detCultivo"></select>
+
+        <label>Cajas aprobadas</label>
+        <div class="stepper">
+          <button type="button" data-target="detCajasAprobadas" data-delta="-1">−</button>
+          <input type="number" id="detCajasAprobadas" value="0" min="0" max="500" step="1" inputmode="numeric">
+          <button type="button" data-target="detCajasAprobadas" data-delta="1">+</button>
+        </div>
+
+        <div class="campo-jugo" id="detCampoJugo">
+          <label>Jarras de jugo</label>
+          <div class="stepper">
+            <button type="button" data-target="detJarrasJugo" data-delta="-1">−</button>
+            <input type="number" id="detJarrasJugo" value="0" min="0" max="200" step="1" inputmode="numeric">
+            <button type="button" data-target="detJarrasJugo" data-delta="1">+</button>
+          </div>
+        </div>
+
+        <label>Horas extra</label>
+        <div class="stepper">
+          <button type="button" data-target="detHorasExtra" data-delta="-0.5">−</button>
+          <input type="number" id="detHorasExtra" value="0" min="0" max="24" step="0.5" inputmode="decimal">
+          <button type="button" data-target="detHorasExtra" data-delta="0.5">+</button>
+        </div>
+
+        <button class="btn-grande btn-primario" id="btnGuardarEdicion">Guardar cambios</button>
+        <button class="btn-grande btn-peligro" id="btnEliminarRegistro">Eliminar registro</button>
+      </div>
+
+      <div id="bloqueAnular" style="display:none;">
+        <p style="font-size:13px;color:#8A8A80;">Este registro ya se sincronizó con la nómina. Para corregirlo, anúlalo — se descontará automáticamente del total del trabajador.</p>
+        <button class="btn-grande btn-peligro" id="btnAnularRegistro">Anular registro</button>
+      </div>
+
+      <div id="bloqueAnuladoInfo" style="display:none;">
+        <div class="aviso-anulado">Este registro fue anulado y ya no cuenta en la nómina.</div>
+      </div>
+
+      <button class="btn-grande btn-secundario" id="btnCerrarDetalle">Cerrar</button>
+    </section>
+
+    <!-- CONFIGURACION -->
+    <section class="pantalla" id="pantalla-config">
+
+      <div class="config-grupo">
+        <h3><svg class="icon" viewBox="0 0 24 24"><path d="M4 4v5h5"/><path d="M20 20v-5h-5"/><path d="M5.5 9a7 7 0 0 1 12-3.5L20 8"/><path d="M18.5 15a7 7 0 0 1-12 3.5L4 16"/></svg>Conexión con n8n</h3>
+        <label>URL del Webhook</label>
+        <input type="url" id="cfgWebhook" placeholder="https://tu-instancia.n8n.cloud/webhook/registro-campo">
+        <label>Clave de acceso del Webhook</label>
+        <input type="password" id="cfgApiKey" placeholder="Clave larga configurada en Header Auth" autocomplete="new-password">
+        <p>Aquí se envían los registros cuando hay señal.</p>
+        <p id="diagnosticoSync" style="display:none;background:#FBE7E2;color:#B4432F;border-radius:8px;padding:10px;margin-top:10px;font-weight:600;word-break:break-word;"></p>
+      </div>
+
+      <div class="config-grupo">
+        <h3><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>Código secreto del rancho</h3>
+        <input type="password" id="cfgSecreto" placeholder="Ej. una frase larga y privada" autocomplete="new-password">
+        <p>Debe ser idéntico al usado al generar los gafetes. Protege que nadie use un QR falso.</p>
+        <a class="btn-chico btn-full-flat" href="admin-gafetes.html" target="_blank" rel="noopener noreferrer">
+          <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3"/></svg>
+          Generar gafetes QR
+        </a>
+      </div>
+
+      <div class="config-grupo">
         <h3><svg class="icon" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Aprobación de nómina</h3>
         <p>Después de revisar <strong>Nomina_Semanal</strong>, aprueba una sola vez. La nómina se copiará a <strong>Historial_Pagos</strong> y se enviará el correo.</p>
         <button class="btn-chico btn-full-flat" id="btnAprobarNomina">
